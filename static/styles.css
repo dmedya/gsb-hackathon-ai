@@ -1,0 +1,199 @@
+/* Genel Stil Ayarları */
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* Ana Kutu (Başlık + Takvim + Ajanda) */
+.calendar-main-contain {
+  width: 90%;
+  max-width: 800px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Takvim Başlık */
+.calendar-header {
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-header button {
+  font-size: 1.2rem;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #d00000;
+  color: white;
+  cursor: pointer;
+}
+.calendar-header button:hover {
+  background-color: #ff0000;
+}
+
+.calendar-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* Takvim Gövdesi */
+.calendar-container {
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+}
+
+/* Haftanın Günleri */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.weekdays div {
+  padding: 15px 0;
+  font-size: 1.2rem;
+}
+
+/* Gün Kutuları */
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+  grid-auto-rows: 140px;
+}
+
+.days div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: #f9f9f9;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.days div:hover {
+  background: #ffb3b3;
+  border-color: #ff0000;
+}
+
+.days div.selected {
+  background: #ff0000;
+  color: white;
+  border: 3px solid #b50000;
+}
+
+.has-event {
+  border: 3px solid #d00000;
+  box-sizing: border-box;
+}
+
+/* Ajanda */
+.agenda {
+  display: none;
+  flex-direction: column;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+.agenda-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.hour {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.hour span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.del-btn {
+  margin-left: auto;
+  background-color: #ddd;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.del-btn:hover {
+  background-color: #bbb;
+}
+
+/* Chatbot Butonu */
+.chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #ff0000, #b50000);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.chat-button:hover {
+  background-color: #b50000;
+  transform: scale(1.1);
+}
+
+/* Chatbot iframe (index.html içindeki) */
+#chatbot-iframe {
+  display: none;
+  width: 450px;
+  height: 550px;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  border: none;
+  background: white;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GencizBiz Asistan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: transparent;
+        }
+
+        .chat-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #d00000;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f5f5f5 url('/static/gsb.png') no-repeat center center;
+            background-size: 50% auto;
+            background-opacity: 0.1;
+            position: relative;
+        }
+
+        .chat-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 245, 245, 0.9);  /* f5f5f5 with opacity */
+            z-index: 0;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .bot {
+            background: white;
+            color: black;
+            align-self: flex-start;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user {
+            background: #d00000;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        #user-input:focus {
+            border-color: #d00000;
+        }
+
+        #send-btn {
+            background: #d00000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        #send-btn:hover {
+            background: #b00000;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .gsb-logo {
+            height: 30px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="/static/gsb.png" alt="GSB Logo" class="gsb-logo">
+            <h2>GencizBiz Asistan</h2>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <div class="message-container">
+                <div class="message bot">👋 Merhaba! Size nasıl yardımcı olabilirim?</div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Mesajınızı yazın...">
+            <button id="send-btn">Gönder</button>
+        </div>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function addMessage(text, isUser) {
+            const messageContainer = document.querySelector('.message-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.textContent = text;
+            messageContainer.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            userInput.value = '';
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/chat/respond', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+
+                if (!response.ok) throw new Error('Ağ yanıtı başarısız');
+                
+                const data = await response.json();
+                addMessage(data.response, false);
+
+                if (data.response.includes("📅")) {
+                    window.parent.postMessage({
+                        type: "chatbot_event",
+                        message: data.response
+                    }, "*");
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                addMessage("Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.", false);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
